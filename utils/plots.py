@@ -84,6 +84,18 @@ def plot_one_box(x, im, color=None, label=None, line_thickness=3, kpt_label=Fals
         plot_skeleton_kpts(im, kpts, steps, orig_shape=orig_shape)
 
 
+def blur_face(x, im):
+    # Blur face
+    assert im.data.contiguous, 'Image not contiguous. Apply np.ascontiguousarray(im) to plot_on_box() input image.'
+    c1, c2 = (int(x[0]), int(x[1])), (int(x[2]), int(x[3]))
+    face = im[c1[1]:c2[1], c1[0]:c2[0]]
+    try:
+        blur = cv2.GaussianBlur(face, (7,7), sigmaX=50, sigmaY=50)
+    except:
+        return
+    im[c1[1]:c2[1], c1[0]:c2[0]] = blur
+
+
 def plot_skeleton_kpts(im, kpts, steps, orig_shape=None):
     #Plot the skeleton and keypointsfor coco datatset
     palette = np.array([[255, 128, 0], [255, 153, 51], [255, 178, 102],

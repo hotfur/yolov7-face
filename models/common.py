@@ -15,7 +15,7 @@ import torch.nn.functional as F
 
 from utils.datasets import letterbox
 from utils.general import non_max_suppression, non_max_suppression_export, make_divisible, scale_coords, increment_path, xyxy2xywh, save_one_box
-from utils.plots import colors, plot_one_box
+from utils.plots import colors, plot_one_box, blur_face
 from utils.torch_utils import time_synchronized
 
 
@@ -670,7 +670,8 @@ class Detections:
                         if crop:
                             save_one_box(box, im, file=save_dir / 'crops' / self.names[int(cls)] / self.files[i])
                         else:  # all others
-                            plot_one_box(box, im, label=label, color=colors(cls))
+                            # plot_one_box(box, im, label=label, color=colors(cls))
+                            blur_face(box, im)
 
             im = Image.fromarray(im.astype(np.uint8)) if isinstance(im, np.ndarray) else im  # from np
             if pprint:
